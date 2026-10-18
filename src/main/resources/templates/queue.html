@@ -37,6 +37,10 @@ th{background:#f8fafc}
 </header>
 
 <main>
+<div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom: 20px;">
+    <h2 style="color:#17365d; margin:0;">Patient Waiting Queue</h2>
+    <a href="/" class="btn secondary" style="background:#e5eaf1; color:#222;">Dashboard</a>
+</div>
 <div th:if="${successMessage}" class="notice success" th:text="${successMessage}"></div>
 <div th:if="${errorMessage}" class="notice error" th:text="${errorMessage}"></div>
 
@@ -95,7 +99,6 @@ th{background:#f8fafc}
 </div>
 </section>
 
-<a href="/" class="btn secondary">Back to Dashboard</a>
 </main>
 </body>
 </html>

@@ -8,53 +8,46 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background: #f1f5f9;
+            background: #f4f7fb;
             color: #1e293b;
             margin: 0;
             padding: 30px;
         }
         .container {
-            max-width: 1100px;
+            max-width: 1200px;
             margin: auto;
-        }
-        h1 { color: #0f766e; }
-        .back {
-            display: inline-block;
-            margin-bottom: 20px;
-            color: #0f766e;
-            text-decoration: none;
-        }
-        .table-wrap {
-            overflow-x: auto;
             background: white;
-            padding: 20px;
+            padding: 25px;
             border-radius: 12px;
+            box-shadow: 0 3px 12px #0001;
         }
-        table {
-            width: 100%;
-            border-collapse: collapse;
+        .top { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+        h1 { color: #17365d; margin: 0; }
+        .top-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        .dashboard-button, .add-button, .edit-link, .delete-button {
+            display: inline-block; padding: 9px 13px; border-radius: 5px; text-decoration: none; cursor: pointer; font-size: 14px; border: none; font-family: inherit;
         }
-        th, td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #e2e8f0;
-        }
-        th {
-            background: #0f766e;
-            color: white;
-        }
+        .dashboard-button { background: #e5eaf1; color: #222; }
+        .add-button { background: #176b55; color: white; }
+        .table-wrap { overflow-x: auto; background: white; padding: 20px 0 0; border-radius: 12px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #e2e8f0; }
+        th { background: #17365d; color: white; }
         tr:hover { background: #f8fafc; }
+        .edit-link { background: #e5efff; color: #174ea6; }
+        .delete-button { background: #b42318; color: white; }
         .empty { padding: 20px; color: #64748b; }
     </style>
 </head>
 <body>
 <div class="container">
-    <a class="back" href="/">← Back to Dashboard</a>
-    <a href="/patients/new"
-   style="display:inline-block; padding:10px 16px; background:#0f766e; color:white; text-decoration:none; border-radius:6px; margin-bottom:15px;">
-   + Add New Patient
-</a>
-    <h1>Hospital Patient Records</h1>
+    <div class="top">
+        <h1>Hospital Patient Records</h1>
+        <div class="top-actions">
+            <a class="dashboard-button" href="/">Dashboard</a>
+            <a class="add-button" href="/patients/new">+ Add New Patient</a>
+        </div>
+    </div>
     <p th:if="${successMessage}"
    th:text="${successMessage}"
    style="color: green; font-weight: bold;">
@@ -87,19 +80,13 @@
 
 
 <td>
-    <a th:href="@{/patients/edit/{id}(id=${patient.patientId})}"
-       style="color:#0f766e; font-weight:bold; text-decoration:none;">
-        Edit
-    </a>
+    <a class="edit-link" th:href="@{/patients/edit/{id}(id=${patient.patientId})}">Edit</a>
 
     <form th:action="@{/patients/delete/{id}(id=${patient.patientId})}"
           method="post"
           style="display:inline;"
           onsubmit="return confirm('Are you sure you want to delete this patient?');">
-        <button type="submit"
-                style="margin-left:10px; padding:6px 10px; background:#dc2626; color:white; border:none; border-radius:5px; cursor:pointer;">
-            Delete
-        </button>
+        <button type="submit" class="delete-button">Delete</button>
     </form>
 </td>
 

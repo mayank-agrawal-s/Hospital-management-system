@@ -6,27 +6,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Doctors | Hospital Management System</title>
     <style>
-        body { font-family: Arial, sans-serif; background: #f1f5f9; color: #1e293b; margin: 0; padding: 30px; }
-        .container { max-width: 1200px; margin: auto; }
-        h1 { color: #0f766e; }
-        .back { display: inline-block; margin-bottom: 20px; color: #0f766e; text-decoration: none; }
-        .add { display: inline-block; padding: 10px 16px; background: #0f766e; color: white; text-decoration: none; border-radius: 6px; margin-bottom: 15px; }
-        .table-wrap { overflow-x: auto; background: white; padding: 20px; border-radius: 12px; }
+        body { font-family: Arial, sans-serif; background: #f4f7fb; color: #1e293b; margin: 0; padding: 30px; }
+        .container { max-width: 1200px; margin: auto; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 3px 12px #0001; }
+        .top { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+        h1 { color: #17365d; margin: 0; }
+        .top-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        .dashboard-button, .add-button, .edit, .delete { display: inline-block; padding: 9px 13px; border-radius: 5px; text-decoration: none; cursor: pointer; font-size: 14px; border: none; font-family: inherit; }
+        .dashboard-button { background: #e5eaf1; color: #222; }
+        .add-button { background: #176b55; color: white; }
+        .table-wrap { overflow-x: auto; background: white; padding: 20px 0 0; border-radius: 12px; }
         table { width: 100%; border-collapse: collapse; }
         th, td { padding: 12px; text-align: left; border-bottom: 1px solid #e2e8f0; }
-        th { background: #0f766e; color: white; }
-        .edit { color: #0f766e; font-weight: bold; text-decoration: none; }
-        .delete { padding: 6px 10px; background: #dc2626; color: white; border: 0; border-radius: 5px; cursor: pointer; }
+        th { background: #17365d; color: white; }
+        .edit { background: #e5efff; color: #174ea6; }
+        .delete { background: #b42318; color: white; }
         .message { color: #15803d; font-weight: bold; }
     </style>
 </head>
 <body>
 <div class="container">
-    <a class="back" href="/">← Back to Dashboard</a>
-    <h1>Doctors Directory</h1>
+    <div class="top">
+        <h1>Doctors Directory</h1>
+        <div class="top-actions">
+            <a class="dashboard-button" href="/">Dashboard</a>
+            <a class="add-button" href="/doctors/new">+ Add New Doctor</a>
+        </div>
+    </div>
 
     <p th:if="${successMessage}" th:text="${successMessage}" class="message"></p>
-    <a class="add" href="/doctors/new">+ Add New Doctor</a>
 
     <div class="table-wrap">
         <table>

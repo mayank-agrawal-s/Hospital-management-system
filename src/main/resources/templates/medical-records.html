@@ -187,24 +187,18 @@
 
 <main>
 
-    <nav class="top-navigation">
-        <a href="/" class="dashboard-button">Dashboard</a>
-    </nav>
-
-    <section class="page-intro">
-        <h2>Medical Records Management</h2>
-        <p>
-            Maintain diagnoses and treatments linked to hospital appointments.
-        </p>
-    </section>
+    <div class="top" style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:20px;">
+        <h2 style="color:#17365d; margin:0;">Medical Records Management</h2>
+        <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+            <a href="/" class="dashboard-button" style="background:#e5eaf1; color:#222; padding:9px 13px; border-radius:5px; text-decoration:none;">Dashboard</a>
+            <a href="/medical-records/new" class="button button-primary" style="background:#176b55; color:white; padding:9px 13px; border-radius:5px; text-decoration:none;">+ Add Medical Record</a>
+        </div>
+    </div>
 
     <section class="content-card">
 
         <div class="section-heading">
             <h3>Medical Records</h3>
-            <a href="/medical-records/new" class="button button-primary">
-                + Add Medical Record
-            </a>
         </div>
 
         <div th:if="${successMessage}"
@@ -264,10 +258,6 @@
 
     </section>
 </main>
-
-<footer>
-    Hospital Management System | RDBMS Lab Project
-</footer>
 
 </body>
 </html>
