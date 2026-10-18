@@ -1,0 +1,87 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Management</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f1f5f9; color: #1e293b; margin: 0; }
+        header { background: #0f766e; color: white; padding: 24px 8%; }
+        header h1 { margin: 0 0 8px; }
+        header p { margin: 0; color: #ccfbf1; }
+        .top { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+        main { max-width: 1100px; margin: 35px auto; padding: 0 20px; }
+        .card { background: white; padding: 24px; border-radius: 14px; border-top: 4px solid #0f766e; box-shadow: 0 4px 12px #0000000a; overflow-x: auto; }
+        .btn { display: inline-block; padding: 10px 15px; border: 0; border-radius: 8px; background: #0f766e; color: white; text-decoration: none; cursor: pointer; font-size: 14px; }
+        .secondary { background: #475569; }
+        table { width: 100%; border-collapse: collapse; margin-top: 18px; }
+        th, td { text-align: left; padding: 12px; border-bottom: 1px solid #e2e8f0; white-space: nowrap; }
+        th { background: #f0fdfa; color: #0f766e; }
+        .message { padding: 12px; border-radius: 8px; margin-bottom: 15px; }
+        .success { background: #dcfce7; color: #166534; }
+        .error { background: #fee2e2; color: #991b1b; }
+        .actions { display: flex; gap: 8px; align-items: center; }
+        form { margin: 0; }
+        footer { text-align: center; padding: 25px; color: #64748b; }
+    </style>
+</head>
+<body>
+<header>
+    <div class="top">
+        <div>
+            <h1>Payment Management</h1>
+            <p>Record and track payments against hospital bills.</p>
+        </div>
+        <a class="btn secondary" href="/">Dashboard</a>
+    </div>
+</header>
+
+<main>
+    <div th:if="${success}" class="message success" th:text="${success}"></div>
+    <div th:if="${error}" class="message error" th:text="${error}"></div>
+
+    <section class="card">
+        <a class="btn" href="/payments/new">+ Record Payment</a>
+        <a class="btn secondary" href="/bills">Back to Bills</a>
+
+        <h2>All Payments</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>Payment ID</th>
+                <th>Bill ID</th>
+                <th>Payment Date</th>
+                <th>Amount (₹)</th>
+                <th>Method</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="payment : ${payments}">
+                <td th:text="${payment.paymentId}"></td>
+                <td th:text="${payment.billId}"></td>
+                <td th:text="${payment.paymentDate}"></td>
+                <td th:text="${payment.amount}"></td>
+                <td th:text="${payment.paymentMethod}"></td>
+                <td>
+                    <div class="actions">
+                        <a class="btn" th:href="@{/payments/edit/{id}(id=${payment.paymentId})}">Edit</a>
+                        <form th:action="@{/payments/delete/{id}(id=${payment.paymentId})}" method="post"
+                              onsubmit="return confirm('Delete this payment?');">
+                            <button class="btn secondary" type="submit">Delete</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(payments)}">
+                <td colspan="6">No payments found. Record your first payment.</td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+</main>
+
+<footer>Hospital Management System | Payments Module</footer>
+</body>
+</html>

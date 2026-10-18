@@ -1,0 +1,273 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Records | Hospital Management System</title>
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f1f5f9;
+            color: #1e293b;
+        }
+
+        header {
+            background: #0f766e;
+            color: white;
+            padding: 24px 8%;
+        }
+
+        header h1 { font-size: 28px; }
+
+        header p {
+            margin-top: 8px;
+            color: #ccfbf1;
+        }
+
+        main {
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .top-navigation {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+        }
+
+        .dashboard-button {
+            padding: 11px 22px;
+            border-radius: 8px;
+            background: #e2e8f0;
+            color: #1e293b;
+            text-decoration: none;
+        }
+
+        .page-intro {
+            background: white;
+            padding: 30px;
+            border-radius: 14px;
+            margin-bottom: 25px;
+        }
+
+        .page-intro h2 {
+            color: #0f766e;
+            margin-bottom: 10px;
+        }
+
+        .page-intro p {
+            color: #64748b;
+            line-height: 1.6;
+        }
+
+        .content-card {
+            background: white;
+            padding: 25px;
+            border-radius: 14px;
+            border-top: 4px solid #0f766e;
+            box-shadow: 0 4px 12px #0000000a;
+        }
+
+        .section-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 22px;
+        }
+
+        .section-heading h3 { font-size: 22px; }
+
+        .button {
+            display: inline-block;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .button-primary {
+            background: #0f766e;
+            color: white;
+        }
+
+        .button-edit {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .button-delete {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .message {
+            padding: 13px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .success {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .table-wrapper { overflow-x: auto; }
+
+        table {
+            width: 100%;
+            min-width: 750px;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #f1f5f9;
+            color: #334155;
+            text-align: left;
+            padding: 15px;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #e2e8f0;
+            vertical-align: top;
+        }
+
+        tbody tr:hover { background: #f8fafc; }
+
+        .actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .actions form { margin: 0; }
+
+        .empty-state {
+            text-align: center;
+            color: #64748b;
+            padding: 30px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 25px;
+            color: #64748b;
+        }
+
+        @media (max-width: 600px) {
+            header { padding: 22px 6%; }
+            header h1 { font-size: 24px; }
+            main { margin: 25px auto; padding: 0 14px; }
+            .page-intro, .content-card { padding: 20px; }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>Hospital Management System</h1>
+    <p>Healthcare administration made simple</p>
+</header>
+
+<main>
+
+    <nav class="top-navigation">
+        <a href="/" class="dashboard-button">Dashboard</a>
+    </nav>
+
+    <section class="page-intro">
+        <h2>Medical Records Management</h2>
+        <p>
+            Maintain diagnoses and treatments linked to hospital appointments.
+        </p>
+    </section>
+
+    <section class="content-card">
+
+        <div class="section-heading">
+            <h3>Medical Records</h3>
+            <a href="/medical-records/new" class="button button-primary">
+                + Add Medical Record
+            </a>
+        </div>
+
+        <div th:if="${successMessage}"
+             class="message success"
+             th:text="${successMessage}"></div>
+
+        <div th:if="${errorMessage}"
+             class="message error"
+             th:text="${errorMessage}"></div>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                <tr>
+                    <th>Record ID</th>
+                    <th>Appointment ID</th>
+                    <th>Diagnosis</th>
+                    <th>Treatment</th>
+                    <th>Record Date</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="record : ${medicalRecords}">
+                    <td th:text="${record.recordId}"></td>
+                    <td th:text="${record.appointmentId}"></td>
+                    <td th:text="${record.diagnosis}"></td>
+                    <td th:text="${record.treatment != null and !record.treatment.isEmpty()
+                        ? record.treatment : 'Not specified'}"></td>
+                    <td th:text="${record.recordDate}"></td>
+
+                    <td>
+                        <div class="actions">
+                            <a th:href="@{/medical-records/edit/{id}(id=${record.recordId})}"
+                               class="button button-edit">Edit</a>
+
+                            <form th:action="@{/medical-records/delete/{id}(id=${record.recordId})}"
+                                  method="post"
+                                  onsubmit="return confirm('Delete this medical record?');">
+                                <button type="submit" class="button button-delete">
+                                    Delete
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr th:if="${#lists.isEmpty(medicalRecords)}">
+                    <td colspan="6" class="empty-state">
+                        No medical records found. Add your first record.
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </section>
+</main>
+
+<footer>
+    Hospital Management System | RDBMS Lab Project
+</footer>
+
+</body>
+</html>

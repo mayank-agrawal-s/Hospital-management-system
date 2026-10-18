@@ -1,0 +1,130 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Appointments | Hospital Management</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            margin: 0;
+            padding: 30px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px #0001;
+        }
+        h1 { color: #17365d; }
+        .top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        a, button {
+            padding: 9px 13px;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .add { background: #176b55; color: white; }
+        .back { background: #e5eaf1; color: #222; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 12px 10px;
+            border-bottom: 1px solid #e2e8f0;
+            text-align: left;
+        }
+        th { background: #17365d; color: white; }
+        .edit { background: #e5efff; color: #174ea6; }
+        .delete { background: #b42318; color: white; }
+        .message {
+            padding: 12px;
+            background: #e4f6e9;
+            color: #176b37;
+            border-radius: 5px;
+        }
+        .error {
+            padding: 12px;
+            background: #fde8e7;
+            color: #a11;
+            border-radius: 5px;
+        }
+        .empty { text-align: center; padding: 25px; color: #666; }
+        .actions { display: flex; gap: 6px; }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <div class="top">
+        <h1>Appointment Management</h1>
+        <div>
+            <a th:href="@{/}" class="back">Dashboard</a>
+            <a th:href="@{/appointments/new}" class="add">+ Add Appointment</a>
+        </div>
+    </div>
+
+    <p th:if="${message}" class="message" th:text="${message}"></p>
+    <p th:if="${error}" class="error" th:text="${error}"></p>
+
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Patient ID</th>
+            <th>Doctor ID</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Reason</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="appointment : ${appointments}">
+            <td th:text="${appointment.appointmentId}"></td>
+            <td th:text="${appointment.patientId}"></td>
+            <td th:text="${appointment.doctorId}"></td>
+            <td th:text="${appointment.appointmentDate}"></td>
+            <td th:text="${appointment.appointmentTime}"></td>
+            <td th:text="${appointment.reason}"></td>
+            <td th:text="${appointment.status}"></td>
+            <td>
+                <div class="actions">
+                    <a class="edit"
+                       th:href="@{/appointments/edit/{id}(id=${appointment.appointmentId})}">
+                        Edit
+                    </a>
+
+                    <form th:action="@{/appointments/delete/{id}(id=${appointment.appointmentId})}"
+                          method="post"
+                          onsubmit="return confirm('Delete this appointment?');">
+                        <button type="submit" class="delete">Delete</button>
+                    </form>
+                </div>
+            </td>
+        </tr>
+
+        <tr th:if="${#lists.isEmpty(appointments)}">
+            <td colspan="8" class="empty">No appointments found.</td>
+        </tr>
+        </tbody>
+    </table>
+
+</div>
+</body>
+</html>

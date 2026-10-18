@@ -1,0 +1,101 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Patient Waiting Queue</title>
+<style>
+*{box-sizing:border-box}
+body{font-family:Arial,sans-serif;background:#f1f5f9;color:#1e293b;margin:0}
+header{background:#0f766e;color:white;padding:24px 8%}
+header h1{margin:0 0 8px}
+header p{margin:0;color:#ccfbf1}
+main{max-width:1100px;margin:30px auto;padding:0 20px}
+.card{background:white;padding:24px;margin-bottom:22px;border-radius:14px;border-top:4px solid #0f766e;box-shadow:0 4px 12px #0000000a}
+h2{margin-top:0;color:#0f766e}
+label{display:block;font-weight:bold;margin:14px 0 7px}
+select{width:100%;padding:11px;border:1px solid #cbd5e1;border-radius:8px}
+button,.btn{display:inline-block;padding:10px 15px;border:0;border-radius:8px;background:#0f766e;color:white;text-decoration:none;cursor:pointer}
+.danger{background:#b91c1c}
+.secondary{background:#475569}
+table{width:100%;border-collapse:collapse;margin-top:15px}
+th,td{text-align:left;padding:12px;border-bottom:1px solid #e2e8f0}
+th{background:#f8fafc}
+.notice{padding:12px;border-radius:8px;margin-bottom:15px}
+.success{background:#dcfce7;color:#166534}
+.error{background:#fee2e2;color:#991b1b}
+.muted{color:#64748b}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+@media(max-width:650px){table{font-size:13px}th,td{padding:8px}}
+</style>
+</head>
+<body>
+<header>
+<h1>Patient Waiting Queue</h1>
+<p>First In, First Out (FIFO) patient management</p>
+</header>
+
+<main>
+<div th:if="${successMessage}" class="notice success" th:text="${successMessage}"></div>
+<div th:if="${errorMessage}" class="notice error" th:text="${errorMessage}"></div>
+
+<section class="card">
+<h2>Add Patient to Queue</h2>
+<form action="/queue/add" method="post">
+<label for="patientId">Select Patient</label>
+<select id="patientId" name="patientId" required>
+<option value="">Choose a registered patient</option>
+<option th:each="patient : ${patients}"
+        th:value="${patient.patientId}"
+        th:text="${patient.patientName + ' (ID: ' + patient.patientId + ')'}">
+</option>
+</select>
+<button type="submit" style="margin-top:15px">Add to Queue</button>
+</form>
+</section>
+
+<section class="card">
+<h2>Current Waiting Queue</h2>
+<p class="muted">Patients are called in the order they joined the queue.</p>
+<p>Patients waiting: <strong th:text="${queueSize}">0</strong></p>
+
+<form action="/queue/next" method="post" style="margin:15px 0">
+<button type="submit">Call Next Patient (FIFO)</button>
+</form>
+
+<div style="overflow-x:auto">
+<table>
+<thead>
+<tr>
+<th>Queue Position</th>
+<th>Patient ID</th>
+<th>Patient Name</th>
+<th>Phone</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr th:each="patient, stat : ${waitingPatients}">
+<td th:text="${stat.count}"></td>
+<td th:text="${patient.patientId}"></td>
+<td th:text="${patient.patientName}"></td>
+<td th:text="${patient.phone != null ? patient.phone : '—'}"></td>
+<td>
+<form th:action="@{/queue/remove/{id}(id=${patient.patientId})}" method="post">
+<button type="submit" class="danger">Remove</button>
+</form>
+</td>
+</tr>
+<tr th:if="${#lists.isEmpty(waitingPatients)}">
+<td colspan="5" class="muted">The waiting queue is empty.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<a href="/" class="btn secondary">Back to Dashboard</a>
+</main>
+</body>
+</html>

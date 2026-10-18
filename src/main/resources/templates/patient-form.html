@@ -1,0 +1,88 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register Patient | Hospital Management System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f1f5f9;
+            color: #1e293b;
+            margin: 0;
+            padding: 30px;
+        }
+        .container {
+            max-width: 650px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 14px;
+            box-shadow: 0 4px 12px #0000000a;
+        }
+        h1 { color: #0f766e; }
+        label {
+            display: block;
+            margin-top: 16px;
+            font-weight: bold;
+        }
+        input, select {
+            width: 100%;
+            padding: 11px;
+            margin-top: 7px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+        button {
+            margin-top: 24px;
+            padding: 12px 20px;
+            background: #0f766e;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        .back {
+            color: #0f766e;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <a class="back" href="/patients">← Back to Patients</a>
+    <h1 th:text="${patient.patientId != null ? 'Edit Patient' : 'Register New Patient'}">
+    Register New Patient
+</h1>
+    <p>Enter the patient's information below.</p>
+
+    
+        <form th:action="@{/patients/save}" method="post" th:object="${patient}">
+    <input type="hidden" th:field="*{patientId}">
+        <label for="patientName">Full Name</label>
+        <input id="patientName" type="text" th:field="*{patientName}" required>
+
+        <label for="phone">Phone</label>
+        <input id="phone" type="tel" th:field="*{phone}">
+
+        <label for="email">Email</label>
+        <input id="email" type="email" th:field="*{email}">
+
+        <label for="gender">Gender</label>
+        <select id="gender" th:field="*{gender}" required>
+            <option value="">Select gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+        </select>
+
+        <label for="dateOfBirth">Date of Birth</label>
+        <input id="dateOfBirth" type="date" th:field="*{dateOfBirth}">
+
+        <button type="submit">Register Patient</button>
+    </form>
+</div>
+</body>
+</html>

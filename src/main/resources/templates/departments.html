@@ -1,0 +1,345 @@
+
+
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Department Management | Hospital Management System</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f1f5f9;
+            color: #1e293b;
+        }
+
+        header {
+            background: #0f766e;
+            color: white;
+            padding: 24px 8%;
+        }
+
+        header h1 {
+            font-size: 28px;
+        }
+
+        header p {
+            margin-top: 8px;
+            color: #ccfbf1;
+        }
+
+        main {
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .top-navigation {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+        }
+
+        .dashboard-button {
+            display: inline-block;
+            padding: 11px 22px;
+            border-radius: 8px;
+            background: #e2e8f0;
+            color: #1e293b;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: normal;
+            text-align: center;
+        }
+
+        .dashboard-button:hover {
+            background: #cbd5e1;
+        }
+
+        .page-intro {
+            background: white;
+            padding: 30px;
+            border-radius: 14px;
+            margin-bottom: 25px;
+        }
+
+        .page-intro h2 {
+            color: #0f766e;
+            margin-bottom: 10px;
+        }
+
+        .page-intro p {
+            color: #64748b;
+            line-height: 1.6;
+        }
+
+        .content-card {
+            background: white;
+            padding: 25px;
+            border-radius: 14px;
+            border-top: 4px solid #0f766e;
+            box-shadow: 0 4px 12px #0000000a;
+        }
+
+        .section-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 22px;
+        }
+
+        .section-heading h3 {
+            font-size: 22px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 11px 17px;
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            font-family: inherit;
+            text-align: center;
+        }
+
+        .button-primary {
+            background: #0f766e;
+            color: white;
+        }
+
+        .button-primary:hover {
+            background: #115e59;
+        }
+
+        .button-edit {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .button-delete {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .button-edit:hover {
+            background: #bfdbfe;
+        }
+
+        .button-delete:hover {
+            background: #fecaca;
+        }
+
+        .message {
+            padding: 13px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .success {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 550px;
+        }
+
+        th {
+            background: #f1f5f9;
+            color: #334155;
+            text-align: left;
+            padding: 15px;
+            font-size: 14px;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 14px;
+        }
+
+        tbody tr:hover {
+            background: #f8fafc;
+        }
+
+        .actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .actions form {
+            margin: 0;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #64748b;
+            padding: 30px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 25px;
+            color: #64748b;
+        }
+
+        @media (max-width: 600px) {
+            header {
+                padding: 22px 6%;
+            }
+
+            header h1 {
+                font-size: 24px;
+            }
+
+            main {
+                margin: 25px auto;
+                padding: 0 14px;
+            }
+
+            .page-intro,
+            .content-card {
+                padding: 20px;
+            }
+
+            .section-heading h3 {
+                font-size: 19px;
+            }
+
+            .dashboard-button {
+                padding: 10px 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>Hospital Management System</h1>
+    <p>Healthcare administration made simple</p>
+</header>
+
+<main>
+
+    <nav class="top-navigation">
+        <a href="/" class="dashboard-button">Dashboard</a>
+    </nav>
+
+    <section class="page-intro">
+        <h2>Department Management</h2>
+        <p>
+            Organize hospital departments, manage department locations,
+            and maintain the hospital's organizational structure.
+        </p>
+    </section>
+
+    <section class="content-card">
+
+        <div class="section-heading">
+            <h3>Hospital Departments</h3>
+
+            <a href="/departments/new" class="button button-primary">
+                + Add Department
+            </a>
+        </div>
+
+        <div th:if="${successMessage}"
+             class="message success"
+             th:text="${successMessage}">
+        </div>
+
+        <div th:if="${errorMessage}"
+             class="message error"
+             th:text="${errorMessage}">
+        </div>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Department ID</th>
+                        <th>Department Name</th>
+                        <th>Location</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr th:each="department : ${departments}">
+                        <td th:text="${department.departmentId}"></td>
+
+                        <td th:text="${department.departmentName}"></td>
+
+                        <td th:text="${department.location != null
+                            and !department.location.isEmpty()
+                            ? department.location : 'Not specified'}"></td>
+
+                        <td>
+                            <div class="actions">
+
+                                <a th:href="@{/departments/edit/{id}(id=${department.departmentId})}"
+                                   class="button button-edit">
+                                    Edit
+                                </a>
+
+                                <form th:action="@{/departments/delete/{id}(id=${department.departmentId})}"
+                                      method="post"
+                                      onsubmit="return confirm('Are you sure you want to delete this department?');">
+
+                                    <button type="submit"
+                                            class="button button-delete">
+                                        Delete
+                                    </button>
+
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <tr th:if="${#lists.isEmpty(departments)}">
+                        <td colspan="4" class="empty-state">
+                            No departments found. Add your first department.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </section>
+
+</main>
+
+<footer>
+    Hospital Management System | RDBMS Lab Project
+</footer>
+
+</body>
+</html>

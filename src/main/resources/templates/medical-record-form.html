@@ -1,0 +1,177 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Record Form | Hospital Management System</title>
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f1f5f9;
+            color: #1e293b;
+            padding: 30px 20px;
+        }
+
+        .container {
+            max-width: 650px;
+            margin: 20px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 14px;
+            box-shadow: 0 4px 12px #0000000a;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 24px;
+            color: #0f766e;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        h1 {
+            color: #0f766e;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #64748b;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-top: 18px;
+            margin-bottom: 7px;
+            font-weight: bold;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            background: white;
+            color: #1e293b;
+            font-family: inherit;
+            font-size: 14px;
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: 2px solid #99f6e4;
+            border-color: #0f766e;
+        }
+
+        button {
+            margin-top: 26px;
+            padding: 12px 22px;
+            background: #0f766e;
+            color: white;
+            border: 0;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover { background: #115e59; }
+
+        .cancel-link {
+            display: inline-block;
+            margin-left: 14px;
+            color: #64748b;
+            text-decoration: none;
+        }
+
+        footer {
+            text-align: center;
+            padding: 25px;
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        @media (max-width: 480px) {
+            .container { padding: 22px; }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <a href="/medical-records" class="back-link">
+        ← Back to Medical Records
+    </a>
+
+    <h1 th:text="${medicalRecord.recordId != null
+        ? 'Edit Medical Record' : 'Add Medical Record'}">
+        Add Medical Record
+    </h1>
+
+    <p class="subtitle">
+        Enter the diagnosis and treatment details for an appointment.
+    </p>
+
+    <form th:action="@{/medical-records/save}"
+          method="post"
+          th:object="${medicalRecord}">
+
+        <input type="hidden" th:field="*{recordId}">
+
+        <label for="appointmentId">Appointment</label>
+        <select id="appointmentId"
+                th:field="*{appointmentId}"
+                required>
+
+            <option value="">Select Appointment</option>
+
+            <option th:each="appointment : ${appointments}"
+                    th:value="${appointment.appointmentId}"
+                    th:text="${'Appointment #' + appointment.appointmentId
+                        + ' | Patient #' + appointment.patientId
+                        + ' | ' + appointment.appointmentDate
+                        + ' ' + appointment.appointmentTime}">
+            </option>
+        </select>
+
+        <label for="diagnosis">Diagnosis</label>
+        <input id="diagnosis"
+               type="text"
+               th:field="*{diagnosis}"
+               maxlength="255"
+               required>
+
+        <label for="treatment">Treatment</label>
+        <textarea id="treatment"
+                  th:field="*{treatment}"
+                  placeholder="Enter treatment details"></textarea>
+
+        <label for="recordDate">Record Date</label>
+        <input id="recordDate"
+               type="date"
+               th:field="*{recordDate}"
+               required>
+
+        <button type="submit">Save Medical Record</button>
+        <a href="/medical-records" class="cancel-link">Cancel</a>
+
+    </form>
+
+</div>
+
+<footer>
+    Hospital Management System | RDBMS Lab Project
+</footer>
+
+</body>
+</html>

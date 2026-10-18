@@ -1,0 +1,198 @@
+
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Form | Hospital Management System</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f1f5f9;
+            color: #1e293b;
+            padding: 30px 20px;
+        }
+
+        .container {
+            max-width: 650px;
+            margin: 20px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 14px;
+            box-shadow: 0 4px 12px #0000000a;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 24px;
+            color: #0f766e;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        h1 {
+            color: #0f766e;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #64748b;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        label {
+            display: block;
+            margin-top: 18px;
+            margin-bottom: 7px;
+            font-weight: bold;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            background: white;
+            color: #1e293b;
+            font-family: inherit;
+            font-size: 14px;
+        }
+
+        input:focus,
+        select:focus {
+            outline: 2px solid #99f6e4;
+            border-color: #0f766e;
+        }
+
+        button {
+            margin-top: 28px;
+            padding: 12px 22px;
+            background: #0f766e;
+            color: white;
+            border: 0;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #115e59;
+        }
+
+        .cancel-link {
+            display: inline-block;
+            margin-left: 14px;
+            color: #64748b;
+            text-decoration: none;
+        }
+
+        .cancel-link:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            text-align: center;
+            padding: 25px;
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 22px;
+            }
+
+            .cancel-link {
+                margin-left: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <a href="/doctors" class="back-link">← Back to Doctors</a>
+
+    <h1 th:text="${doctor.doctorId != null ? 'Edit Doctor' : 'Register Doctor'}">
+        Register Doctor
+    </h1>
+
+    <p class="subtitle">
+        Enter the doctor's details and select the department.
+    </p>
+
+    <form th:action="@{/doctors/save}"
+          method="post"
+          th:object="${doctor}">
+
+        <input type="hidden" th:field="*{doctorId}">
+
+        <label for="doctorName">Doctor Name</label>
+        <input id="doctorName"
+               type="text"
+               th:field="*{doctorName}"
+               maxlength="100"
+               required>
+
+        <label for="specialization">Specialization</label>
+        <input id="specialization"
+               type="text"
+               th:field="*{specialization}"
+               maxlength="100"
+               required>
+
+        <label for="phone">Phone</label>
+        <input id="phone"
+               type="tel"
+               th:field="*{phone}"
+               maxlength="15">
+
+        <label for="email">Email</label>
+        <input id="email"
+               type="email"
+               th:field="*{email}"
+               maxlength="100">
+
+        <label for="departmentId">Department</label>
+        <select id="departmentId"
+                th:field="*{departmentId}"
+                required>
+
+            <option value="">Select Department</option>
+
+            <option th:each="department : ${departments}"
+                    th:value="${department.departmentId}"
+                    th:text="${department.departmentName}">
+            </option>
+
+        </select>
+
+        <button type="submit">Save Doctor</button>
+        <a href="/doctors" class="cancel-link">Cancel</a>
+
+    </form>
+
+</div>
+
+<footer>
+    Hospital Management System | RDBMS Lab Project
+</footer>
+
+</body>
+</html>

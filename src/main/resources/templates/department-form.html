@@ -1,0 +1,299 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Department Form | Hospital Management System</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f1f5f9;
+            color: #1e293b;
+        }
+
+        header {
+            background: #0f766e;
+            color: white;
+            padding: 24px 8%;
+        }
+
+        header h1 {
+            font-size: 28px;
+        }
+
+        header p {
+            margin-top: 8px;
+            color: #ccfbf1;
+        }
+
+        main {
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .page-intro {
+            background: white;
+            padding: 30px;
+            border-radius: 14px;
+            margin-bottom: 25px;
+        }
+
+        .page-intro h2 {
+            color: #0f766e;
+            margin-bottom: 10px;
+        }
+
+        .page-intro p {
+            color: #64748b;
+            line-height: 1.6;
+        }
+
+        .form-card {
+            max-width: 700px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 14px;
+            border-top: 4px solid #0f766e;
+            box-shadow: 0 4px 12px #0000000a;
+        }
+
+        .form-card h3 {
+            font-size: 22px;
+            margin-bottom: 8px;
+        }
+
+        .form-description {
+            color: #64748b;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 22px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 9px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .required {
+            color: #dc2626;
+        }
+
+        input {
+            width: 100%;
+            padding: 13px 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 15px;
+            color: #1e293b;
+            background: white;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #0f766e;
+            box-shadow: 0 0 0 3px #0f766e20;
+        }
+
+        .help-text {
+            display: block;
+            color: #64748b;
+            font-size: 13px;
+            margin-top: 7px;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 28px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .button-primary {
+            background: #0f766e;
+            color: white;
+        }
+
+        .button-primary:hover {
+            background: #115e59;
+        }
+
+        .button-secondary {
+            background: #e2e8f0;
+            color: #1e293b;
+        }
+
+        .button-secondary:hover {
+            background: #cbd5e1;
+        }
+
+        footer {
+            text-align: center;
+            padding: 25px;
+            color: #64748b;
+        }
+
+        @media (max-width: 600px) {
+            header {
+                padding: 22px 6%;
+            }
+
+            header h1 {
+                font-size: 24px;
+            }
+
+            main {
+                margin: 25px auto;
+                padding: 0 14px;
+            }
+
+            .page-intro,
+            .form-card {
+                padding: 22px;
+            }
+
+            .form-actions .button {
+                flex: 1;
+            }
+
+            .top-navigation {
+    max-width: 1100px;
+    margin: 20px auto 0;
+    padding: 0 20px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.top-navigation a {
+    color: #0f766e;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.top-navigation a:hover {
+    text-decoration: underline;
+}
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>Hospital Management System</h1>
+    <p>Healthcare administration made simple</p>
+</header>
+
+<main>
+    <nav class="top-navigation">
+    <a href="/">← Back to Dashboard</a>
+</nav>
+
+    <section class="page-intro">
+        <h2 th:text="${department.departmentId == null
+            ? 'Add Department' : 'Edit Department'}">
+            Department Details
+        </h2>
+
+        <p>
+            Maintain department information and its location
+            within the hospital.
+        </p>
+    </section>
+
+    <section class="form-card">
+
+        <h3>Department Information</h3>
+        <p class="form-description">
+            Enter the department details below. Fields marked
+            with an asterisk are required.
+        </p>
+
+        <form th:action="@{/departments/save}"
+              th:object="${department}"
+              method="post">
+
+            <input type="hidden" th:field="*{departmentId}">
+
+            <div class="form-group">
+                <label for="departmentName">
+                    Department Name <span class="required">*</span>
+                </label>
+
+                <input type="text"
+                       id="departmentName"
+                       th:field="*{departmentName}"
+                       placeholder="e.g. Cardiology"
+                       maxlength="100"
+                       required>
+
+                <span class="help-text">
+                    Enter a unique name for the department.
+                </span>
+            </div>
+
+            <div class="form-group">
+                <label for="location">Department Location</label>
+
+                <input type="text"
+                       id="location"
+                       th:field="*{location}"
+                       placeholder="e.g. Block A"
+                       maxlength="100">
+
+                <span class="help-text">
+                    Enter the building, block, or floor if applicable.
+                </span>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="button button-primary">
+                    Save Department
+                </button>
+
+                <a href="/departments" class="button button-secondary">
+                    Cancel
+                </a>
+            </div>
+
+        </form>
+
+    </section>
+
+</main>
+
+<footer>
+    Hospital Management System | RDBMS Lab Project
+</footer>
+
+</body>
+</html>

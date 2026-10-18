@@ -1,0 +1,64 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctors | Hospital Management System</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f1f5f9; color: #1e293b; margin: 0; padding: 30px; }
+        .container { max-width: 1200px; margin: auto; }
+        h1 { color: #0f766e; }
+        .back { display: inline-block; margin-bottom: 20px; color: #0f766e; text-decoration: none; }
+        .add { display: inline-block; padding: 10px 16px; background: #0f766e; color: white; text-decoration: none; border-radius: 6px; margin-bottom: 15px; }
+        .table-wrap { overflow-x: auto; background: white; padding: 20px; border-radius: 12px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #e2e8f0; }
+        th { background: #0f766e; color: white; }
+        .edit { color: #0f766e; font-weight: bold; text-decoration: none; }
+        .delete { padding: 6px 10px; background: #dc2626; color: white; border: 0; border-radius: 5px; cursor: pointer; }
+        .message { color: #15803d; font-weight: bold; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <a class="back" href="/">← Back to Dashboard</a>
+    <h1>Doctors Directory</h1>
+
+    <p th:if="${successMessage}" th:text="${successMessage}" class="message"></p>
+    <a class="add" href="/doctors/new">+ Add New Doctor</a>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th><th>Name</th><th>Specialization</th>
+                <th>Phone</th><th>Email</th><th>Department ID</th><th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="doctor : ${doctors}">
+                <td th:text="${doctor.doctorId}"></td>
+                <td th:text="${doctor.doctorName}"></td>
+                <td th:text="${doctor.specialization}"></td>
+                <td th:text="${doctor.phone}"></td>
+                <td th:text="${doctor.email}"></td>
+                <td th:text="${doctor.departmentId}"></td>
+                <td>
+                    <a class="edit" th:href="@{/doctors/edit/{id}(id=${doctor.doctorId})}">Edit</a>
+                    <form th:action="@{/doctors/delete/{id}(id=${doctor.doctorId})}"
+                          method="post" style="display:inline"
+                          onsubmit="return confirm('Delete this doctor?');">
+                        <button class="delete" type="submit">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(doctors)}">
+                <td colspan="7">No doctors found.</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>
