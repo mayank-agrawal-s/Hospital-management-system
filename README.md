@@ -43,6 +43,14 @@ export DB_USERNAME=root
 export DB_PASSWORD='your_password'
 ```
 
+Then import the schema file:
+
+```bash
+mysql -u root -p < database/schema.sql
+```
+
+This file includes the full database schema and sample records for the project.
+
 ## Run the Project
 
 ```bash
