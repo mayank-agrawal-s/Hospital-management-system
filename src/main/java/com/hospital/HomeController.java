@@ -5,6 +5,7 @@ import com.hospital.entity.Appointment;
 import com.hospital.entity.Bill;
 import com.hospital.entity.Doctor;
 import com.hospital.entity.Patient;
+import com.hospital.entity.Payment;
 import com.hospital.repository.AppointmentRepository;
 import com.hospital.repository.BillRepository;
 import com.hospital.repository.DoctorRepository;
@@ -52,6 +53,65 @@ public class HomeController {
         this.appointmentRepository = appointmentRepository;
         this.billRepository = billRepository;
         this.paymentRepository = paymentRepository;
+    }
+
+    static Map<String, BigDecimal> calculateRevenueSummary(
+            List<Bill> allBills,
+            List<Payment> allPayments) {
+
+        BigDecimal totalRevenue = allPayments.stream()
+                .map(Payment::getAmount)
+                .filter(amount -> amount != null)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        BigDecimal totalBillValue = BigDecimal.ZERO;
+        BigDecimal paidBillValue = BigDecimal.ZERO;
+        BigDecimal pendingAmount = BigDecimal.ZERO;
+
+        Map<Integer, BigDecimal> paymentsByBill = new HashMap<>();
+
+        allPayments.forEach(payment -> {
+            if (payment.getBillId() != null && payment.getAmount() != null) {
+                paymentsByBill.merge(
+                        payment.getBillId(),
+                        payment.getAmount(),
+                        BigDecimal::add
+                );
+            }
+        });
+
+        for (Bill bill : allBills) {
+            BigDecimal billAmount = bill.getTotalAmount() != null
+                    ? bill.getTotalAmount()
+                    : BigDecimal.ZERO;
+
+            totalBillValue = totalBillValue.add(billAmount);
+
+            BigDecimal amountPaid = paymentsByBill.getOrDefault(
+                    bill.getBillId(),
+                    BigDecimal.ZERO
+            );
+
+            if ("Paid".equalsIgnoreCase(bill.getStatus())) {
+                paidBillValue = paidBillValue.add(billAmount);
+            } else {
+                BigDecimal outstanding = billAmount
+                        .subtract(amountPaid)
+                        .max(BigDecimal.ZERO);
+
+                if (outstanding.signum() > 0) {
+                    pendingAmount = pendingAmount.add(outstanding);
+                }
+            }
+        }
+
+        Map<String, BigDecimal> summary = new HashMap<>();
+        summary.put("totalRevenue", totalRevenue);
+        summary.put("totalBillValue", totalBillValue);
+        summary.put("paidBillValue", paidBillValue);
+        summary.put("pendingAmount", pendingAmount);
+        summary.put("totalPayments", totalBillValue);
+        return summary;
     }
 
     @GetMapping("/")
@@ -139,65 +199,31 @@ public class HomeController {
         // Load payments once and calculate actual money received.
         var allPayments = paymentRepository.findAll();
 
-        BigDecimal totalRevenue = allPayments.stream()
-                .map(payment -> payment.getAmount())
+        // Calculate bill values and outstanding balances.
+        List<Bill> allBills = billRepository.findAll();
+        Map<String, BigDecimal> revenueSummary =
+                calculateRevenueSummary(allBills, allPayments);
+
+        BigDecimal totalRevenue = revenueSummary.get("totalRevenue");
+        BigDecimal totalBillValue = revenueSummary.get("totalBillValue");
+        BigDecimal pendingAmount = revenueSummary.get("pendingAmount");
+        BigDecimal paidBillValue = revenueSummary.get("paidBillValue");
+        BigDecimal totalPayments = revenueSummary.get("totalPayments");
+
+        BigDecimal currentMonthRevenue = allPayments.stream()
+                .filter(payment -> payment.getPaymentDate() != null
+                        && YearMonth.from(payment.getPaymentDate()).equals(currentMonth))
+                .map(Payment::getAmount)
                 .filter(amount -> amount != null)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        // Calculate bill values and outstanding balances.
-        List<Bill> allBills = billRepository.findAll();
+        long pendingBills = allBills.stream()
+                .filter(bill -> !"Paid".equalsIgnoreCase(bill.getStatus()))
+                .count();
 
-        BigDecimal totalBillValue = BigDecimal.ZERO;
-        BigDecimal pendingAmount = BigDecimal.ZERO;
-        BigDecimal paidBillValue = BigDecimal.ZERO;
-
-        long pendingBills = 0;
-        long paidBills = 0;
-
-        Map<Integer, BigDecimal> paymentsByBill = new HashMap<>();
-
-        allPayments.forEach(payment -> {
-            if (payment.getBillId() != null
-                    && payment.getAmount() != null) {
-
-                paymentsByBill.merge(
-                        payment.getBillId(),
-                        payment.getAmount(),
-                        BigDecimal::add
-                );
-            }
-        });
-
-        for (Bill bill : allBills) {
-
-            BigDecimal billAmount = bill.getTotalAmount() != null
-                    ? bill.getTotalAmount()
-                    : BigDecimal.ZERO;
-
-            totalBillValue = totalBillValue.add(billAmount);
-
-            if ("Paid".equalsIgnoreCase(bill.getStatus())) {
-
-                paidBills++;
-                paidBillValue = paidBillValue.add(billAmount);
-
-            } else {
-
-                pendingBills++;
-
-                BigDecimal amountPaid = paymentsByBill.getOrDefault(
-                        bill.getBillId(),
-                        BigDecimal.ZERO
-                );
-
-                BigDecimal outstanding =
-                        billAmount.subtract(amountPaid);
-
-                if (outstanding.signum() > 0) {
-                    pendingAmount = pendingAmount.add(outstanding);
-                }
-            }
-        }
+        long paidBills = allBills.stream()
+                .filter(bill -> "Paid".equalsIgnoreCase(bill.getStatus()))
+                .count();
 
         // Monthly revenue for the current and previous five months.
         Map<YearMonth, BigDecimal> revenueByMonth = new HashMap<>();
@@ -288,6 +314,8 @@ public class HomeController {
         model.addAttribute("paidBillValue", paidBillValue);
         model.addAttribute("totalRevenue", totalRevenue);
         model.addAttribute("totalBillValue", totalBillValue);
+        model.addAttribute("totalPayments", totalPayments);
+        model.addAttribute("currentMonthRevenue", currentMonthRevenue);
 
         // Calendar data.
         model.addAttribute("today", today);

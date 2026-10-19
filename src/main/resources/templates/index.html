@@ -255,21 +255,21 @@ button,input{font:inherit}
 
         <div class="revenue-content">
             <div>
-                <div class="revenue-total-label">Total Payments Received</div>
-                <div class="revenue-total">₹<span th:text="${#numbers.formatDecimal(totalRevenue,1,'COMMA',2,'POINT')}">0.00</span></div>
+                <div class="revenue-total-label">Total Payment Received This Month</div>
+                <div class="revenue-total">₹<span th:text="${#numbers.formatDecimal(currentMonthRevenue,1,'COMMA',2,'POINT')}">0.00</span></div>
 
                 <div class="revenue-stats">
                     <div class="mini-stat">
-                        <span>Total Payments Received</span>
-                        <strong class="green" th:text="${'₹' + #numbers.formatDecimal(totalRevenue,1,'COMMA',2,'POINT')}">₹0.00</strong>
+                        <span>Total Amount</span>
+                        <strong class="blue" th:text="${'₹' + #numbers.formatDecimal(totalBillValue,1,'COMMA',2,'POINT')}">₹0.00</strong>
                     </div>
                     <div class="mini-stat">
-                        <span>Pending Bills Amount</span>
+                        <span>Unpaid</span>
                         <strong class="orange" th:text="${'₹' + #numbers.formatDecimal(pendingAmount,1,'COMMA',2,'POINT')}">₹0.00</strong>
                     </div>
                     <div class="mini-stat">
-                        <span>Fully Paid Bills</span>
-                        <strong class="blue" th:text="${paidBills}">0</strong>
+                        <span>Paid</span>
+                        <strong class="green" th:text="${'₹' + #numbers.formatDecimal(totalRevenue,1,'COMMA',2,'POINT')}">₹0.00</strong>
                     </div>
                 </div>
             </div>

@@ -2,6 +2,10 @@
 
 A full-stack hospital management application built with Java, Spring Boot, Thymeleaf, MySQL, and Maven.
 
+## Project Overview
+
+This project is designed for managing a hospital's core operations efficiently. It includes modules for patient records, doctor and department management, appointment scheduling, medical records, billing, payment processing, and queue management.
+
 ## Features
 
 - Patient management
@@ -12,6 +16,7 @@ A full-stack hospital management application built with Java, Spring Boot, Thyme
 - Bill and payment management
 - Patient queue system
 - Dashboard overview
+- Revenue summary dashboard
 
 ## Tech Stack
 
@@ -21,22 +26,26 @@ A full-stack hospital management application built with Java, Spring Boot, Thyme
 - Thymeleaf
 - MySQL
 - Maven
+- GitHub for version control
 
 ## Project Structure
 
 - `src/main/java` — backend Java classes and controllers
-- `src/main/resources/templates` — Thymeleaf frontend pages
-- `src/main/resources/application.properties` — database configuration
+- `src/main/resources/templates` — frontend Thymeleaf pages
+- `src/main/resources/application.properties` — application and database configuration
+- `database/schema.sql` — database schema and sample data
+- `src/test/java` — test cases for validation
 
 ## Prerequisites
 
 - Java 21+
 - Maven
-- MySQL server
+- MySQL Server
+- MySQL Workbench (optional for database management)
 
 ## Database Setup
 
-Create a MySQL database named `hospital_db` and set the environment variables before starting the project:
+Create a MySQL database named `hospital_db` and configure the environment variables before running the project:
 
 ```bash
 export DB_USERNAME=root
@@ -49,7 +58,10 @@ Then import the schema file:
 mysql -u root -p < database/schema.sql
 ```
 
-This file includes the full database schema and sample records for the project.
+Important note:
+- The project includes the database schema and sample data in `database/schema.sql`.
+- A large MySQL Workbench database dump is not uploaded to GitHub because it is usually too large and is not required for project submission.
+- The app can be run using the schema file and the configured environment variables.
 
 ## Run the Project
 
@@ -60,7 +72,7 @@ export DB_PASSWORD='your_password'
 ./mvnw spring-boot:run
 ```
 
-The application will run at:
+The application runs at:
 
 ```text
 http://localhost:8080
@@ -82,4 +94,4 @@ https://github.com/mayank-agrawal-s/Hospital-management-system.git
 
 ## College Submission Note
 
-This project is a hospital management system developed to manage departments, doctors, patients, appointments, records, bills, payments, and queue services.
+This project is a hospital management system developed to streamline patient handling, appointment scheduling, billing, records, payment processing, and queue management for academic submission.
